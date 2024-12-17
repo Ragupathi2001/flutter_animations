@@ -1,0 +1,58 @@
+import 'package:flutter/material.dart';
+
+
+import '../../animation_controller_state.dart';
+import '../../gallery_navigation/page_scaffold.dart';
+
+class RotationTransitionPage extends StatefulWidget {
+  const RotationTransitionPage({Key? key}) : super(key: key);
+
+  @override
+  State<RotationTransitionPage> createState() =>
+      _RotationTransitionPageState(const Duration(milliseconds: 1000));
+}
+
+class _RotationTransitionPageState
+    extends AnimationControllerState<RotationTransitionPage> {
+  _RotationTransitionPageState(Duration duration) : super(duration);
+  bool _isAnimating = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _toggleAnimation();
+  }
+
+  void _toggleAnimation() {
+    if (_isAnimating) {
+      animationController.stop();
+    } else {
+      animationController.repeat();
+    }
+    setState(() => _isAnimating = !_isAnimating);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return PageScaffold(
+      title: 'RotationTransition',
+      floatingActionButton: FloatingActionButton(
+        onPressed: _toggleAnimation,
+        child: Icon(_isAnimating ? Icons.pause : Icons.play_arrow),
+      ),
+      body: Center(
+        child: GestureDetector(
+          onTap: _toggleAnimation,
+          child: RotationTransition(
+            turns: animationController,
+            child: Container(
+              width: 180,
+              height: 180,
+              color: Theme.of(context).primaryColor,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
